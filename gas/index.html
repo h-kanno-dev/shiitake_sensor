@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body { font-family: sans-serif; margin: 20px; background: #fdfdfd; color: #333; }
+      h1 { font-size: 1.2rem; color: #37474f; padding-left: 10px; }
+      table { width: 100%; border-collapse: collapse; margin-top: 10px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+      th, td { border: none; padding: 12px 15px; text-align: center; font-size: 0.9rem; }
+      th { background: #37474f; color: white; }
+      tr:nth-child(even) { background: #fafafa; }
+      .alert-box { font-weight: bold; color: #d32f2f; }
+      .status-ok { color: #388e3c; }
+      .loading { text-align: center; color: #999; margin-top: 50px; }
+      button { background: transparent; color: #666; border: 1px solid #ccc; transition: 0.3s; }
+    </style>
+  </head>
+  <body>
+    <h1>状態監視モニター</h1>
+    <button id="reloadBtn">🔄 リロード</button>
+    <div id="content">
+      <p class="loading">データ読み込み中...</p>
+    </div>
+
+    <script>
+      // ページが開いたら、GAS側の getMonitorDataObj を呼び出す
+      window.onload = function() {
+        google.script.run.withSuccessHandler(showTable).getMonitorDataObj();
+      };
+
+      function showTable(data) {
+        if (!data.rows || data.rows.length === 0) {
+          document.getElementById('content').innerHTML = '<p>データがまだありません。</p>';
+          return;
+        }
+
+        let html = '<table><tr><th>時刻</th><th>温度</th><th>湿度</th><th>状態</th></tr>';
+        for (let i = 0; i < data.rows.length; i++) {
+          let r = data.rows[i];
+          let statusClass = (r[3] === 'OK' || r[3] === '') ? 'status-ok' : 'alert-box';
+          html += `<tr>
+            <td>${r[0].split(' ')[1]}</td>
+            <td>${r[1]}℃</td>
+            <td>${r[2]}%</td>
+            <td class="${statusClass}">${r[3] || '良好'}</td>
+          </tr>`;
+        }
+        html += '</table>';
+        document.getElementById('content').innerHTML = html;
+      }
+
+      function load(){
+      document.getElementById('content').textContent = '読み込み中…';
+      google.script.run.withSuccessHandler(showTable)
+        .withFailureHandler(err => {
+          console.error(err);
+          document.getElementById('content').textContent = 'データ取得に失敗しました';
+        })
+        .getMonitorDataObj();
+    }
+
+    document.getElementById('reloadBtn').addEventListener('click', load);
+    load();
+
+    //1分ごとに自動リロード
+    setInterval(function() {
+      console.log("自動更新中...");
+      load();
+    }, 60000);
+    </script>
+  </body>
+</html>
