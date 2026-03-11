@@ -1,19 +1,19 @@
 # しいたけ栽培支援モニタリングシステム
 
 ## ■システムフロー
-DHT22で温湿度取得
-↓
-ESP8266
- ├─ LED / ブザーによる物理アラート
- └─ Wi-Fi経由でGAS WebAppへデータ送信
-        ↓
-      Googleスプレッドシートへログ保存
-        ↓
-      GASで状態判定
-        ↓
-      Discord Webhook通知
-        ↓
-      HtmlServiceによるWebモニター表示
+DHT22で温湿度取得  
+↓  
+ESP8266  
+ ├─ LED / ブザーによる物理アラート  
+ └─ Wi-Fi経由でGAS WebAppへデータ送信  
+        ↓  
+      Googleスプレッドシートへログ保存  
+        ↓  
+      GASで状態判定  
+        ↓  
+      Discord Webhook通知  
+        ↓  
+      HtmlServiceによるWebモニター表示  
       
 ## ■概要
 家庭でのしいたけ栽培における環境管理を自動化・可視化するために開発したIoTシステムです。  
