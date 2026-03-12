@@ -1,3 +1,11 @@
+/**
+ * しいたけ栽培支援モニタリングシステム - 端末側プログラム
+ * DHT22センサーから温湿度データを取得し、Wi-Fi経由でGASへ送信します。
+ * 異常検知時には、LEDとブザーによる物理アラートを発報します。
+ * * @author Honami Kanno
+ * @license MIT
+ */
+
 #include "secrets.h"
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
